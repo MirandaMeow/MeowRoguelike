@@ -1,0 +1,14 @@
+name: MeowRoguelike
+main: cn.miranda.MeowRoguelike.MeowRoguelike
+version: 0.0.2
+author: Miranda
+description: 猫与地下城/勇者斗恶猫
+softdepend: [ MeowCraft ]
+load: POSTWORLD
+api-version: 1.15
+
+commands:
+  rlroom:
+    description:
+    usage:
+    permissions:
