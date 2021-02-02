@@ -1,8 +1,11 @@
 package cn.miranda.MeowRoguelike;
 
-import cn.miranda.MeowCraft.Manager.MessageManager;
-import cn.miranda.MeowRoguelike.Manager.*;
+import cn.miranda.MeowRoguelike.Manager.CommandRegister;
+import cn.miranda.MeowRoguelike.Manager.ConfigManager;
+import cn.miranda.MeowRoguelike.Manager.PluginLoaderManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 public class MeowRoguelike extends JavaPlugin {
     public static MeowRoguelike plugin;
@@ -14,14 +17,23 @@ public class MeowRoguelike extends JavaPlugin {
     }
 
     public void onEnable() {
-        MessageManager.ConsoleMessage("[猫与地下城] 正在载入");
+        System.out.print("[猫与地下城] 正在载入");
         PluginLoaderManager.loads();
         CommandRegister.registerCommands();
         ConfigManager.loadConfigs();
+        System.out.print(plugin.getDataFolder());
     }
 
     public void onDisable() {
-        MessageManager.ConsoleMessage("[猫与地下城] 正在禁用");
+        System.out.print("[猫与地下城] 正在禁用");
         ConfigManager.saveConfigs();
+    }
+
+    public File getSchemaFolder() {
+        File folder = new File(plugin.getDataFolder() + "/rooms");
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        return folder;
     }
 }

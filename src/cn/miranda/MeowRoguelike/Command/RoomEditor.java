@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,10 +40,30 @@ public class RoomEditor implements TabExecutor {
         }
         if (Objects.equals(option, "save") && args.length == 2) {
             Region region = Editor.getSelection(player);
+            String roomName = args[1];
             if (region == null) {
                 MessageManager.Message(player, "§e尚未选区或选区不符合要求");
+                return true;
             }
-
+            try {
+                Editor.saveRegion(region, roomName);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            MessageManager.Message(player, String.format("§e已保存房间 §b%s", roomName));
+            return true;
+        }
+        if (Objects.equals(option, "load") && args.length == 2) {
+            String roomName = args[1];
+            try {
+                if (Editor.loadRegion(roomName, player)) {
+                    MessageManager.Message(player, String.format("§e已读取房间 §b%s", roomName));
+                    return true;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            MessageManager.Message(player, "§c房间不存在");
             return true;
         }
         MessageManager.Message(player, "§c命令参数错误");

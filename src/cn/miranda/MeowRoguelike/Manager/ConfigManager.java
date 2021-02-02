@@ -12,7 +12,6 @@ public class ConfigManager {
     public static HashMap<YamlConfiguration, File> configList = new HashMap<>();
     public static File configFile;
     public static YamlConfiguration config;
-    public static YamlConfiguration rooms;
 
     public static YamlConfiguration loadFile(String fileName) {
         configFile = new File(plugin.getDataFolder(), fileName);
@@ -27,7 +26,6 @@ public class ConfigManager {
     public static void loadConfigs() {
         configList = new HashMap<>();
         config = loadFile("config.yml");
-        rooms = loadFile("rooms.yml");
     }
 
     public static void saveConfigs() {
