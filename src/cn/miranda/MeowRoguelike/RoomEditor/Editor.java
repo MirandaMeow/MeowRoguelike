@@ -7,9 +7,12 @@ import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
+import com.sk89q.worldedit.function.mask.ExistingBlockMask;
+import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
@@ -17,10 +20,15 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockID;
+import com.sk89q.worldedit.world.block.BlockState;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.io.*;
+import java.util.List;
+import java.util.Objects;
 
 import static cn.miranda.MeowRoguelike.MeowRoguelike.plugin;
 
@@ -58,12 +66,22 @@ public class Editor {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Mask mask = new ExistingBlockMask(editSession);
+        editSession.replaceBlocks(region, mask, new BaseBlock(BlockState.getFromInternalId(BlockID.AIR)));
+        List<? extends Entity> entities = editSession.getEntities(region);
+        for (Entity i : entities) {
+            if (Objects.equals(i.getType().toString(), "minecraft:player")) {
+                continue;
+            }
+            System.out.print(i.getType());
+            i.remove();
+        }
+        editSession.flushQueue();
     }
 
     public static boolean loadRegion(String roomName, Player player) throws IOException {
         LocalSession playerSession = ((WorldEditPlugin) PluginLoaderManager.worldEdit).getSession(player);
         File file = new File(plugin.getSchemaFolder(), String.format("%s.schema", roomName));
-        Location location = player.getLocation();
         if (!file.exists()) {
             return false;
         }
@@ -71,16 +89,22 @@ public class Editor {
         try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
             Clipboard clipboard = reader.read();
             playerSession.setClipboard(new ClipboardHolder(clipboard));
-            try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(player.getWorld()), -1)) {
-                Operation operation = new ClipboardHolder(clipboard)
-                        .createPaste(editSession)
-                        .copyEntities(true)
-                        .to(BlockVector3.at(location.getX(), location.getY(), location.getZ()))
-                        .ignoreAirBlocks(false)
-                        .build();
-                Operations.complete(operation);
-            }
+            showClipboard(clipboard, player.getLocation(), player);
             return true;
+        }
+    }
+
+    public static void showClipboard(Clipboard clipboard, Location location, Player player) {
+        LocalSession playerSession = ((WorldEditPlugin) PluginLoaderManager.worldEdit).getSession(player);
+        playerSession.setClipboard(new ClipboardHolder(clipboard));
+        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(player.getWorld()), -1)) {
+            Operation operation = new ClipboardHolder(clipboard)
+                    .createPaste(editSession)
+                    .copyEntities(true)
+                    .to(BlockVector3.at(location.getX(), location.getY(), location.getZ()))
+                    .ignoreAirBlocks(false)
+                    .build();
+            Operations.complete(operation);
         }
     }
 }
