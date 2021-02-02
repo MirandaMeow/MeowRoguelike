@@ -27,9 +27,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static cn.miranda.MeowRoguelike.Manager.ConfigManager.config;
 import static cn.miranda.MeowRoguelike.MeowRoguelike.plugin;
 
 
@@ -48,7 +50,7 @@ public class Editor {
         int sx = region.getMaximumPoint().getX();
         int sy = region.getMaximumPoint().getY();
         int sz = region.getMaximumPoint().getZ();
-        if (Math.abs(fx - sx) + 1 == 25 && Math.abs(fy - sy) + 1 == 15 && Math.abs(fz - sz) + 1 == 25) {
+        if (Math.abs(fx - sx) + 1 == config.getInt("room.x") && Math.abs(fy - sy) + 1 == config.getInt("room.y") && Math.abs(fz - sz) + 1 == config.getInt("room.z")) {
             return region;
         }
         return null;
@@ -73,7 +75,6 @@ public class Editor {
             if (Objects.equals(i.getType().toString(), "minecraft:player")) {
                 continue;
             }
-            System.out.print(i.getType());
             i.remove();
         }
         editSession.flushQueue();
@@ -89,12 +90,12 @@ public class Editor {
         try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
             Clipboard clipboard = reader.read();
             playerSession.setClipboard(new ClipboardHolder(clipboard));
-            showClipboard(clipboard, player.getLocation(), player);
+            show(player, clipboard, player.getLocation());
             return true;
         }
     }
 
-    public static void showClipboard(Clipboard clipboard, Location location, Player player) {
+    public static void show(Player player, Clipboard clipboard, Location location) {
         LocalSession playerSession = ((WorldEditPlugin) PluginLoaderManager.worldEdit).getSession(player);
         playerSession.setClipboard(new ClipboardHolder(clipboard));
         try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(player.getWorld()), -1)) {
@@ -106,5 +107,30 @@ public class Editor {
                     .build();
             Operations.complete(operation);
         }
+    }
+
+    public static ArrayList<String> getRoomNames() {
+        File folder = new File(plugin.getSchemaFolder().toString());
+        ArrayList<String> schems = new ArrayList<>();
+        if (!folder.isDirectory()) {
+            return null;
+        }
+        File[] fl = folder.listFiles();
+        if (fl.length == 0) {
+            return null;
+        }
+        for (File i : fl) {
+            schems.add(i.getName());
+        }
+        return schems;
+    }
+
+    public static boolean deleteRoom(String roomName) {
+        File file = new File(plugin.getSchemaFolder(), String.format("%s.schema", roomName));
+        if (file.exists()) {
+            file.delete();
+            return true;
+        }
+        return false;
     }
 }

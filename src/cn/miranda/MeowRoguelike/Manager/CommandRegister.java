@@ -1,6 +1,6 @@
 package cn.miranda.MeowRoguelike.Manager;
 
-import cn.miranda.MeowRoguelike.Command.RoomEditor;
+import cn.miranda.MeowRoguelike.Command.EditorCommand;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 
@@ -18,7 +18,7 @@ public class CommandRegister {
     }
 
     public static void registerCommands() {
-        map.put("rlroom", new RoomEditor());
+        map.put("rlroom", new EditorCommand());
         for (Map.Entry<String, CommandExecutor> entry : map.entrySet()) {
             register(entry.getKey(), entry.getValue());
         }

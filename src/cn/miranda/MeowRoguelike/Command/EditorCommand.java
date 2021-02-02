@@ -16,7 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class RoomEditor implements TabExecutor {
+import static cn.miranda.MeowRoguelike.Manager.ConfigManager.config;
+
+
+public class EditorCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (!(sender instanceof Player)) {
@@ -38,11 +41,12 @@ public class RoomEditor implements TabExecutor {
             MessageManager.Message(player, "§c命令参数错误");
             return true;
         }
-        if (Objects.equals(option, "save") && args.length == 2) {
+        int argLength = args.length;
+        if (Objects.equals(option, "save") && argLength == 2) {
             Region region = Editor.getSelection(player);
             String roomName = args[1];
             if (region == null) {
-                MessageManager.Message(player, "§e尚未选区或选区不符合要求");
+                MessageManager.Message(player, String.format("§e尚未选区或选区不符合要求, 选区尺寸 §b(%d, %d, %d)", config.getInt("room.x"),config.getInt("room.y"),config.getInt("room.z")));
                 return true;
             }
             try {
@@ -53,7 +57,7 @@ public class RoomEditor implements TabExecutor {
             MessageManager.Message(player, String.format("§e已保存房间 §b%s", roomName));
             return true;
         }
-        if (Objects.equals(option, "load") && args.length == 2) {
+        if (Objects.equals(option, "load") && argLength == 2) {
             String roomName = args[1];
             try {
                 if (Editor.loadRegion(roomName, player)) {
@@ -62,6 +66,27 @@ public class RoomEditor implements TabExecutor {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+            MessageManager.Message(player, "§c房间不存在");
+            return true;
+        }
+        if (Objects.equals(option, "list") && argLength == 1) {
+            ArrayList<String> rooms = Editor.getRoomNames();
+            if (rooms == null) {
+                MessageManager.Message(player, "§e没有已保存的房间");
+                return true;
+            }
+            MessageManager.Message(player, "§e房间列表");
+            for (String i : rooms) {
+                MessageManager.Message(player, String.format("§b--- §e%s", i.replace(".schema", "")));
+            }
+            return true;
+        }
+        if (Objects.equals(option, "remove") && argLength == 2) {
+            String roomName = args[1];
+            if (Editor.deleteRoom(roomName)) {
+                MessageManager.Message(player, String.format("§e已删除房间 §b%s", roomName));
+                return true;
             }
             MessageManager.Message(player, "§c房间不存在");
             return true;
