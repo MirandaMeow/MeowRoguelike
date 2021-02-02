@@ -1,4 +1,4 @@
-package cn.miranda.MeowRoguelike.RoomEditor;
+package cn.miranda.MeowRoguelike.Constructors;
 
 import org.bukkit.block.data.BlockData;
 

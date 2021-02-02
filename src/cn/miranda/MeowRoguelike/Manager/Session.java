@@ -1,6 +1,6 @@
 package cn.miranda.MeowRoguelike.Manager;
 
-import cn.miranda.MeowRoguelike.RoomEditor.Room;
+import cn.miranda.MeowRoguelike.Constructors.Room;
 import org.bukkit.Location;
 
 import java.util.ArrayList;

@@ -12,8 +12,8 @@ import java.util.HashMap;
 
 public class MeowRoguelike extends JavaPlugin {
     public static MeowRoguelike plugin;
-    public String Version;
-    public HashMap<Player, Session> sessions = new HashMap<>();
+    public final String Version;
+    public final HashMap<Player, Session> sessions = new HashMap<>();
 
     public MeowRoguelike() {
         plugin = this;
