@@ -1,9 +1,9 @@
 name: MeowRoguelike
 main: cn.miranda.MeowRoguelike.MeowRoguelike
-version: 0.0.3
+version: 0.0.1
 author: Miranda
 description: 猫与地下城/勇者斗恶猫
-softdepend: [ MeowCraft ]
+softdepend: [ MeowCraft, WorldEdit ]
 load: POSTWORLD
 api-version: 1.15
 
