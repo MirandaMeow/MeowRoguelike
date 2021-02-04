@@ -1,4 +1,4 @@
-package cn.miranda.MeowRoguelike.RoomEditor;
+package cn.miranda.MeowRoguelike.Room;
 
 import cn.miranda.MeowRoguelike.Manager.PluginLoaderManager;
 import com.boydti.fawe.util.EditSessionBuilder;
@@ -30,6 +30,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import static cn.miranda.MeowRoguelike.Manager.ConfigManager.config;
 import static cn.miranda.MeowRoguelike.MeowRoguelike.plugin;
@@ -80,7 +81,7 @@ public class Editor {
         editSession.flushQueue();
     }
 
-    public static boolean loadRegion(String roomName, Player player) throws IOException {
+    public static boolean loadRegion(String roomName, Player player, Location location) throws IOException {
         LocalSession playerSession = ((WorldEditPlugin) PluginLoaderManager.worldEdit).getSession(player);
         File file = new File(plugin.getSchemaFolder(), String.format("%s.schema", roomName));
         if (!file.exists()) {
@@ -90,7 +91,11 @@ public class Editor {
         try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
             Clipboard clipboard = reader.read();
             playerSession.setClipboard(new ClipboardHolder(clipboard));
-            show(player, clipboard, player.getLocation());
+            if (location == null) {
+                show(player, clipboard, player.getLocation());
+            } else {
+                show(player, clipboard, location);
+            }
             return true;
         }
     }
@@ -123,6 +128,10 @@ public class Editor {
             schems.add(i.getName());
         }
         return schems;
+    }
+    public static int getRandom(int size) {
+        Random random = new Random();
+        return random.nextInt(size);
     }
 
     public static boolean deleteRoom(String roomName) {

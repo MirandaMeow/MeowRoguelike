@@ -2,7 +2,8 @@ package cn.miranda.MeowRoguelike.Command;
 
 import cn.miranda.MeowCraft.Manager.MessageManager;
 import cn.miranda.MeowCraft.Utils.Misc;
-import cn.miranda.MeowRoguelike.RoomEditor.Editor;
+import cn.miranda.MeowRoguelike.Generator.PathGenerator;
+import cn.miranda.MeowRoguelike.Room.Editor;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static cn.miranda.MeowRoguelike.Manager.ConfigManager.config;
-
 
 public class EditorCommand implements TabExecutor {
     @Override
@@ -35,7 +35,7 @@ public class EditorCommand implements TabExecutor {
             MessageManager.Message(player, "§c你没有权限");
             return true;
         }
-        ArrayList<String> validArgs = new ArrayList<>(Arrays.asList("save", "load", "list", "remove"));
+        ArrayList<String> validArgs = new ArrayList<>(Arrays.asList("save", "load", "list", "remove", "test"));
         String option = args[0];
         if (!validArgs.contains(option)) {
             MessageManager.Message(player, "§c命令参数错误");
@@ -46,7 +46,7 @@ public class EditorCommand implements TabExecutor {
             Region region = Editor.getSelection(player);
             String roomName = args[1];
             if (region == null) {
-                MessageManager.Message(player, String.format("§e尚未选区或选区不符合要求, 选区尺寸 §b(%d, %d, %d)", config.getInt("room.x"),config.getInt("room.y"),config.getInt("room.z")));
+                MessageManager.Message(player, String.format("§e尚未选区或选区不符合要求, 选区尺寸 §b(%d, %d, %d)", config.getInt("room.x"), config.getInt("room.y"), config.getInt("room.z")));
                 return true;
             }
             try {
@@ -60,7 +60,7 @@ public class EditorCommand implements TabExecutor {
         if (Objects.equals(option, "load") && argLength == 2) {
             String roomName = args[1];
             try {
-                if (Editor.loadRegion(roomName, player)) {
+                if (Editor.loadRegion(roomName, player, null)) {
                     MessageManager.Message(player, String.format("§e已读取房间 §b%s", roomName));
                     return true;
                 }
@@ -89,6 +89,10 @@ public class EditorCommand implements TabExecutor {
                 return true;
             }
             MessageManager.Message(player, "§c房间不存在");
+            return true;
+        }
+        if (Objects.equals(option, "test")) {
+            PathGenerator.generator(player);
             return true;
         }
         MessageManager.Message(player, "§c命令参数错误");

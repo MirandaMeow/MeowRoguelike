@@ -21,7 +21,6 @@ public class MeowRoguelike extends JavaPlugin {
         PluginLoaderManager.loads();
         CommandRegister.registerCommands();
         ConfigManager.loadConfigs();
-        System.out.print(plugin.getDataFolder());
     }
 
     public void onDisable() {
