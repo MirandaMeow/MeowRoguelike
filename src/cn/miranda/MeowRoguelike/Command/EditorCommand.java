@@ -27,7 +27,7 @@ public class EditorCommand implements TabExecutor {
         }
         Player player = (Player) sender;
         if (args.length == 0) {
-            MessageManager.Message(player, "用法xxxxxxxx");
+            MessageManager.Message(player, "§e用法: §b/rlroom save|load|list|remove|create");
             return true;
         }
         if (!player.hasPermission("rl.edit")) {

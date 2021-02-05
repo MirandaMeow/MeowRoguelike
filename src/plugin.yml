@@ -1,6 +1,6 @@
 name: MeowRoguelike
 main: cn.miranda.MeowRoguelike.MeowRoguelike
-version: 0.1.0
+version: 0.1.1
 author: Miranda
 description: 猫与地下城/勇者斗恶猫
 softdepend: [ MeowCraft, WorldEdit ]
@@ -9,6 +9,6 @@ api-version: 1.15
 
 commands:
   rlroom:
-    description:
-    usage:
-    permissions:
+    description: 房间管理与迷宫生成
+    usage: /rlroom save|load|list|remove|create
+    permissions: rl.*
