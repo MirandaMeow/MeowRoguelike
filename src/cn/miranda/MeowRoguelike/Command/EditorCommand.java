@@ -2,8 +2,8 @@ package cn.miranda.MeowRoguelike.Command;
 
 import cn.miranda.MeowCraft.Manager.MessageManager;
 import cn.miranda.MeowCraft.Utils.Misc;
-import cn.miranda.MeowRoguelike.Generator.PathGenerator;
-import cn.miranda.MeowRoguelike.Room.Editor;
+import cn.miranda.MeowRoguelike.Core.Editor;
+import cn.miranda.MeowRoguelike.Core.PathGenerator;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,11 +31,11 @@ public class EditorCommand implements TabExecutor {
             MessageManager.Message(player, "用法xxxxxxxx");
             return true;
         }
-        if (!player.hasPermission("rlroom.edit")) {
+        if (!player.hasPermission("rl.edit")) {
             MessageManager.Message(player, "§c你没有权限");
             return true;
         }
-        ArrayList<String> validArgs = new ArrayList<>(Arrays.asList("save", "load", "list", "remove", "test"));
+        ArrayList<String> validArgs = new ArrayList<>(Arrays.asList("save", "load", "list", "remove", "test", "create"));
         String option = args[0];
         if (!validArgs.contains(option)) {
             MessageManager.Message(player, "§c命令参数错误");
@@ -91,8 +91,20 @@ public class EditorCommand implements TabExecutor {
             MessageManager.Message(player, "§c房间不存在");
             return true;
         }
-        if (Objects.equals(option, "test")) {
-            PathGenerator.generator(player);
+        if (Objects.equals(option, "create") && argLength == 2) {
+            int roomCount;
+            try {
+                roomCount = Integer.parseInt(args[1]) - 1;
+                if (roomCount < 0) {
+                    MessageManager.Message(player, "§c房间长度错误");
+                    return true;
+                }
+            } catch (NumberFormatException e) {
+                MessageManager.Message(player, "§c房间数量必须为数字");
+                return true;
+            }
+            new PathGenerator(player, roomCount);
+            MessageManager.Message(player, "§e生成完成");
             return true;
         }
         MessageManager.Message(player, "§c命令参数错误");
@@ -102,7 +114,7 @@ public class EditorCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         if (strings.length == 1) {
-            return Misc.returnSelectList(new ArrayList<>(Arrays.asList("save", "load", "list", "remove")), strings[0]);
+            return Misc.returnSelectList(new ArrayList<>(Arrays.asList("save", "load", "list", "remove", "test", "create")), strings[0]);
         }
         return null;
     }

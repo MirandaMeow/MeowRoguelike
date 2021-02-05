@@ -1,4 +1,4 @@
-package cn.miranda.MeowRoguelike.Room;
+package cn.miranda.MeowRoguelike.Core;
 
 import cn.miranda.MeowRoguelike.Manager.PluginLoaderManager;
 import com.boydti.fawe.util.EditSessionBuilder;

@@ -1,5 +1,6 @@
 package cn.miranda.MeowRoguelike.Room;
 
+import cn.miranda.MeowRoguelike.Core.Editor;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class Node {
 
     public Node link(ArrayList<Node> nodes) {
         ArrayList<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
+        Direction opposite;
         for (Direction direction : Direction.values()) {
             NodeLocation tempLocation = this.nodeLocation.add(direction.getOffset());
             for (Node node : nodes) {
@@ -48,15 +50,24 @@ public class Node {
             }
             if (lastNode != null) {
                 if (tempLocation.equals(lastNode.getNodeLocation())) {
-                    this.directions.add(direction);
+                    if (!this.directions.contains(direction)) {
+                        this.directions.add(direction);
+                    }
                 }
             }
         }
-        Direction newDirection = directions.get(Editor.getRandom(directions.size()));
-        if (!this.directions.contains(newDirection)) {
-            this.directions.add(newDirection);
+        Direction newDirection;
+        if (directions.size() > 0) {
+            newDirection = directions.get(Editor.getRandom(directions.size()));
+            if (!this.directions.contains(newDirection)) {
+                this.directions.add(newDirection);
+            }
+            opposite = newDirection.opposite();
+            ArrayList<Direction> newDirections = new ArrayList<>();
+            newDirections.add(opposite);
+            return new Node(this.nodeLocation.add(newDirection.getOffset()), newDirections, this);
         }
-        return new Node(this.nodeLocation.add(newDirection.getOffset()), new ArrayList<>(), this);
+        return null;
     }
 
 
