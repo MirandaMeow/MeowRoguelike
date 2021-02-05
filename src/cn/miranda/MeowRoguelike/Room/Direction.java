@@ -19,18 +19,38 @@ public enum Direction {
         this.isFlat = isFlat;
     }
 
+    /**
+     * 获取方位的相对偏移
+     *
+     * @return 方位的相对偏移
+     */
     public NodeLocation getOffset() {
         return this.offset;
     }
 
+    /**
+     * 获取门的相对偏移
+     *
+     * @return 门的相对偏移
+     */
     public NodeLocation getDoorLocation() {
         return this.doorLocation;
     }
 
+    /**
+     * 判断是否为平面方位
+     *
+     * @return 是平面方位返回 true，否则返回 false
+     */
     public boolean isFlat() {
         return this.isFlat;
     }
 
+    /**
+     * 返回方位的对向方位
+     *
+     * @return 该方位的对向方位
+     */
     public Direction opposite() {
         switch (this) {
             case UP:

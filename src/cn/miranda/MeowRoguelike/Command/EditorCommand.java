@@ -122,8 +122,9 @@ public class EditorCommand implements TabExecutor {
                 MessageManager.Message(player, "§c房间数量必须为数字");
                 return true;
             }
-            new PathGenerator(player, roomCount);
-            MessageManager.Message(player, "§e生成完成");
+            PathGenerator pathGenerator = new PathGenerator(player, roomCount);
+            ArrayList<Integer> result = pathGenerator.getResult();
+            MessageManager.Message(player, String.format("§e生成完成, 主路 §b%d §e个, 支路 §b%d §e个", result.get(0), result.get(1)));
             return true;
         }
         MessageManager.Message(player, "§c命令参数错误");

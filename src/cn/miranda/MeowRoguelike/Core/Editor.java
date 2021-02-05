@@ -26,7 +26,10 @@ import com.sk89q.worldedit.world.block.BlockState;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -38,8 +41,10 @@ import static cn.miranda.MeowRoguelike.MeowRoguelike.plugin;
 
 public class Editor {
     /**
+     * 获取玩家的选区信息
+     *
      * @param player 进行动作的玩家
-     * @return 返回空
+     * @return 玩家的 WorldEdit 选区
      */
     public static Region getSelection(Player player) {
         Region region;
@@ -62,6 +67,8 @@ public class Editor {
     }
 
     /**
+     * 保存选区
+     *
      * @param region   被保存的区域
      * @param roomName 被保存的区域的文件名
      */
@@ -90,10 +97,12 @@ public class Editor {
     }
 
     /**
+     * 读取选区
+     *
      * @param roomName 被载入的区域的文件名
      * @param player   进行动作的玩家
      * @param location 生成区域的位置
-     * @return 如果成功则返回 true，否则返回 false
+     * @return 成功则返回 true，否则返回 false
      * @throws IOException 发生错误时抛出异常
      */
     public static boolean loadRegion(String roomName, Player player, Location location) throws IOException {
@@ -116,6 +125,8 @@ public class Editor {
     }
 
     /**
+     * 展现指定选区
+     *
      * @param player    进行动作的玩家
      * @param clipboard 被粘贴的剪贴板
      * @param location  生成区域的位置
@@ -135,7 +146,10 @@ public class Editor {
     }
 
     /**
-     * @return 返回房间名称的列表
+     * 获取经过过滤后符合要求的房间列表
+     *
+     * @param prefix 过滤房间类型
+     * @return 被过滤的房间名称列表
      */
     public static ArrayList<String> getRoomNames(String prefix) {
         File folder = new File(plugin.getSchemaFolder().toString());
@@ -159,8 +173,10 @@ public class Editor {
     }
 
     /**
+     * 生成指定范围的随机数
+     *
      * @param size -1 随机数最大值
-     * @return 返回 [0 , size) 的随机数
+     * @return [0 , size) 的随机数
      */
     public static int getRandom(int size) {
         Random random = new Random();
@@ -168,6 +184,8 @@ public class Editor {
     }
 
     /**
+     * 删除指定房间
+     *
      * @param roomName 被删除的房间的名称
      * @return 删除成功则返回 ture，否则返回 false
      */

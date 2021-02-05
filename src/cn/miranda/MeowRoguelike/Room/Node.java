@@ -22,18 +22,39 @@ public class Node {
         this.roomType = roomType;
     }
 
+    /**
+     * 获取该节点的相对坐标
+     *
+     * @return 该节点的相对坐标
+     */
     public NodeLocation getNodeLocation() {
         return this.nodeLocation;
     }
 
+    /**
+     * 设置房间类型
+     *
+     * @param roomType 房间类型
+     */
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
     }
 
+    /**
+     * 获取房间类型
+     *
+     * @return 房间类型
+     */
     public RoomType getRoomType() {
         return this.roomType;
     }
 
+    /**
+     * 获取门的绝对位置列表
+     *
+     * @param location 基准坐标
+     * @return 绝对位置列表
+     */
     public HashMap<Direction, Location> getDoors(Location location) {
         HashMap<Direction, Location> doors = new HashMap<>();
         Location realLocation = this.getRealLocation(location);
@@ -43,10 +64,21 @@ public class Node {
         return doors;
     }
 
+    /**
+     * 获取所有方位的列表
+     *
+     * @return 方位列表
+     */
     public ArrayList<Direction> getDirections() {
         return this.directions;
     }
 
+    /**
+     * 获取基准坐标
+     *
+     * @param location 绝对坐标
+     * @return 基准坐标
+     */
     public Location getRealLocation(Location location) {
         int x = config.getInt("room.x");
         int y = config.getInt("room.y");
@@ -54,6 +86,12 @@ public class Node {
         return location.add(this.nodeLocation.getX() * x, this.nodeLocation.getY() * y, this.nodeLocation.getZ() * z);
     }
 
+    /**
+     * 将该房间连接到一个新的房间
+     *
+     * @param nodes 所有节点的列表
+     * @return 新的节点
+     */
     public Node link(ArrayList<Node> nodes) {
         ArrayList<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
         Direction opposite;

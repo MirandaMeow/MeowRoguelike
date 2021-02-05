@@ -1,6 +1,6 @@
 package cn.miranda.MeowRoguelike;
 
-import cn.miranda.MeowRoguelike.Manager.CommandRegister;
+import cn.miranda.MeowRoguelike.Command.EditorCommand;
 import cn.miranda.MeowRoguelike.Manager.ConfigManager;
 import cn.miranda.MeowRoguelike.Manager.PluginLoaderManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,7 +19,7 @@ public class MeowRoguelike extends JavaPlugin {
     public void onEnable() {
         System.out.print("[猫与地下城] 正在载入");
         PluginLoaderManager.loads();
-        CommandRegister.registerCommands();
+        plugin.getCommand("rlroom").setExecutor(new EditorCommand());
         ConfigManager.loadConfigs();
     }
 

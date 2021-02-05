@@ -12,6 +12,11 @@ public enum RoomType {
         this.prefix = string;
     }
 
+    /**
+     * 获得前缀
+     *
+     * @return 前缀
+     */
     public String getPrefix() {
         return this.prefix;
     }

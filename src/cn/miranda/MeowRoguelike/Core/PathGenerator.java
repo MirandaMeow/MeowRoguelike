@@ -11,14 +11,16 @@ import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class PathGenerator {
     private final ArrayList<Node> nodes = new ArrayList<>();
+    private final ArrayList<Integer> result = new ArrayList<>(Arrays.asList(0, 0));
 
     public PathGenerator(Player player, int roomCount) {
+
         generator(player, roomCount);
     }
 
@@ -31,11 +33,22 @@ public class PathGenerator {
         show(player);
     }
 
+    /**
+     * 根据随机数得出该节点是否允许连接新的节点
+     *
+     * @param chance 概率
+     * @return 成功则返回 true，否则返回 false
+     */
     private boolean canLink(int chance) {
-        Random random = new Random();
-        return random.nextInt(100) > chance;
+        return Editor.getRandom(100) > chance;
     }
 
+    /**
+     * 返回根据类型筛选的房间名称
+     *
+     * @param prefix 筛选的类型
+     * @return 房间名称
+     */
     private String selectRoom(String prefix) {
         ArrayList<String> rooms = Editor.getRoomNames(prefix);
         if (rooms == null) {
@@ -44,14 +57,24 @@ public class PathGenerator {
         if (rooms.size() == 0) {
             return null;
         }
-        Random random = new Random();
-        return rooms.get(random.nextInt(rooms.size()));
+        return rooms.get(Editor.getRandom(rooms.size()));
     }
 
+    /**
+     * 返回所有节点
+     *
+     * @return 节点集合
+     */
+    @Deprecated
     public ArrayList<Node> getNodes() {
         return this.nodes;
     }
 
+    /**
+     * 添加指定个数的主路
+     *
+     * @param count 主路长度
+     */
     private void addMainNode(int count) {
         for (int i = 0; i < count; i++) {
             Node nowNode = nodes.get(nodes.size() - 1);
@@ -63,6 +86,12 @@ public class PathGenerator {
         }
     }
 
+    /**
+     * 根据概率添加支路
+     *
+     * @param chance   生成支路的概率
+     * @param roomType 生成支路的房间类型
+     */
     private void addSubNode(int chance, RoomType roomType) {
         ArrayList<Node> subNodes = new ArrayList<>();
         for (Node nowNode : nodes) {
@@ -81,6 +110,12 @@ public class PathGenerator {
         nodes.addAll(subNodes);
     }
 
+    /**
+     * 为每个房间生成合理的门
+     *
+     * @param node     节点
+     * @param location 基准坐标
+     */
     private void creatDoors(Node node, Location location) {
         HashMap<Direction, Location> doors = node.getDoors(location);
         for (Map.Entry<Direction, Location> door : doors.entrySet()) {
@@ -102,6 +137,11 @@ public class PathGenerator {
         }
     }
 
+    /**
+     * 展现出整个迷宫
+     *
+     * @param player 展现在指定玩家的位置
+     */
     private void show(Player player) {
         for (Node node : nodes) {
             try {
@@ -115,5 +155,28 @@ public class PathGenerator {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 返回生成房间的结果
+     *
+     * @return 生成房间的结果
+     */
+    public ArrayList<Integer> getResult() {
+        for (Node node : nodes) {
+            switch (node.getRoomType()) {
+                case MAIN:
+                case BOSS:
+                case ORIGIN:
+                    result.set(0, result.get(0) + 1);
+                    break;
+                case SUB:
+                    result.set(1, result.get(1) + 1);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return result;
     }
 }
