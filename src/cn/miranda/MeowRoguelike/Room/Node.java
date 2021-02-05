@@ -5,6 +5,7 @@ import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static cn.miranda.MeowRoguelike.Manager.ConfigManager.config;
 
@@ -23,8 +24,13 @@ public class Node {
         return this.nodeLocation;
     }
 
-    public Node getLastNode() {
-        return this.lastNode;
+    public HashMap<Direction, Location> getDoors(Location location) {
+        HashMap<Direction, Location> doors = new HashMap<>();
+        Location realLocation = this.getRealLocation(location);
+        for (Direction direction : this.directions) {
+            doors.put(direction, realLocation.clone().add(direction.getDoorLocation().getX(), direction.getDoorLocation().getY(), direction.getDoorLocation().getZ()));
+        }
+        return doors;
     }
 
     public ArrayList<Direction> getDirections() {
@@ -69,6 +75,4 @@ public class Node {
         }
         return null;
     }
-
-
 }

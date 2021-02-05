@@ -103,7 +103,8 @@ public class EditorCommand implements TabExecutor {
                 MessageManager.Message(player, "§c房间数量必须为数字");
                 return true;
             }
-            new PathGenerator(player, roomCount);
+            PathGenerator pathGenerator = new PathGenerator(player, roomCount);
+            System.out.print(pathGenerator.getNodes());
             MessageManager.Message(player, "§e生成完成");
             return true;
         }

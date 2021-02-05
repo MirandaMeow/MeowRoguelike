@@ -37,6 +37,10 @@ import static cn.miranda.MeowRoguelike.MeowRoguelike.plugin;
 
 
 public class Editor {
+    /**
+     * @param player 进行动作的玩家
+     * @return 返回空
+     */
     public static Region getSelection(Player player) {
         Region region;
         LocalSession playerSession = ((WorldEditPlugin) PluginLoaderManager.worldEdit).getSession(player);
@@ -57,6 +61,11 @@ public class Editor {
         return null;
     }
 
+    /**
+     * @param region   被保存的区域
+     * @param roomName 被保存的区域的文件名
+     * @throws FileNotFoundException 发生错误时抛出异常
+     */
     public static void saveRegion(Region region, String roomName) throws FileNotFoundException {
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
         File file = new File(plugin.getSchemaFolder(), String.format("%s.schema", roomName));
@@ -81,6 +90,13 @@ public class Editor {
         editSession.flushQueue();
     }
 
+    /**
+     * @param roomName 被载入的区域的文件名
+     * @param player   进行动作的玩家
+     * @param location 生成区域的位置
+     * @return 如果成功则返回 true，否则返回 false
+     * @throws IOException 发生错误时抛出异常
+     */
     public static boolean loadRegion(String roomName, Player player, Location location) throws IOException {
         LocalSession playerSession = ((WorldEditPlugin) PluginLoaderManager.worldEdit).getSession(player);
         File file = new File(plugin.getSchemaFolder(), String.format("%s.schema", roomName));
@@ -100,6 +116,11 @@ public class Editor {
         }
     }
 
+    /**
+     * @param player    进行动作的玩家
+     * @param clipboard 被粘贴的剪贴板
+     * @param location  生成区域的位置
+     */
     public static void show(Player player, Clipboard clipboard, Location location) {
         LocalSession playerSession = ((WorldEditPlugin) PluginLoaderManager.worldEdit).getSession(player);
         playerSession.setClipboard(new ClipboardHolder(clipboard));
@@ -114,6 +135,9 @@ public class Editor {
         }
     }
 
+    /**
+     * @return 返回房间名称的列表
+     */
     public static ArrayList<String> getRoomNames() {
         File folder = new File(plugin.getSchemaFolder().toString());
         ArrayList<String> schems = new ArrayList<>();
@@ -125,15 +149,24 @@ public class Editor {
             return null;
         }
         for (File i : fl) {
-            schems.add(i.getName());
+            schems.add(i.getName().replace(".schema", ""));
         }
         return schems;
     }
+
+    /**
+     * @param size -1 随机数最大值
+     * @return 返回 [0 , size) 的随机数
+     */
     public static int getRandom(int size) {
         Random random = new Random();
         return random.nextInt(size);
     }
 
+    /**
+     * @param roomName 被删除的房间的名称
+     * @return 删除成功则返回 ture，否则返回 false
+     */
     public static boolean deleteRoom(String roomName) {
         File file = new File(plugin.getSchemaFolder(), String.format("%s.schema", roomName));
         if (file.exists()) {
