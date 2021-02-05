@@ -13,15 +13,25 @@ public class Node {
     private final NodeLocation nodeLocation;
     private final ArrayList<Direction> directions;
     private final Node lastNode;
+    private RoomType roomType;
 
-    public Node(NodeLocation nodeLocation, ArrayList<Direction> directions, Node lastNode) {
+    public Node(NodeLocation nodeLocation, ArrayList<Direction> directions, Node lastNode, RoomType roomType) {
         this.nodeLocation = nodeLocation;
         this.directions = directions;
         this.lastNode = lastNode;
+        this.roomType = roomType;
     }
 
     public NodeLocation getNodeLocation() {
         return this.nodeLocation;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
+    public RoomType getRoomType() {
+        return this.roomType;
     }
 
     public HashMap<Direction, Location> getDoors(Location location) {
@@ -71,7 +81,7 @@ public class Node {
             opposite = newDirection.opposite();
             ArrayList<Direction> newDirections = new ArrayList<>();
             newDirections.add(opposite);
-            return new Node(this.nodeLocation.add(newDirection.getOffset()), newDirections, this);
+            return new Node(this.nodeLocation.add(newDirection.getOffset()), newDirections, this, null);
         }
         return null;
     }

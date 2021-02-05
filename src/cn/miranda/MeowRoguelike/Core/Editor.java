@@ -138,20 +138,25 @@ public class Editor {
     /**
      * @return 返回房间名称的列表
      */
-    public static ArrayList<String> getRoomNames() {
+    public static ArrayList<String> getRoomNames(String prefix) {
         File folder = new File(plugin.getSchemaFolder().toString());
-        ArrayList<String> schems = new ArrayList<>();
+        ArrayList<String> schema = new ArrayList<>();
         if (!folder.isDirectory()) {
             return null;
         }
-        File[] fl = folder.listFiles();
-        if (fl.length == 0) {
+        File[] files = folder.listFiles();
+        if (files == null) {
             return null;
         }
-        for (File i : fl) {
-            schems.add(i.getName().replace(".schema", ""));
+        if (files.length == 0) {
+            return null;
         }
-        return schems;
+        for (File i : files) {
+            if (i.getName().contains(prefix) || Objects.equals(prefix, "all")) {
+                schema.add(i.getName().replace(".schema", ""));
+            }
+        }
+        return schema;
     }
 
     /**
