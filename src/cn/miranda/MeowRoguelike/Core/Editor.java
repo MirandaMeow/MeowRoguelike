@@ -64,9 +64,8 @@ public class Editor {
     /**
      * @param region   被保存的区域
      * @param roomName 被保存的区域的文件名
-     * @throws FileNotFoundException 发生错误时抛出异常
      */
-    public static void saveRegion(Region region, String roomName) throws FileNotFoundException {
+    public static void saveRegion(Region region, String roomName) {
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
         File file = new File(plugin.getSchemaFolder(), String.format("%s.schema", roomName));
         EditSession editSession = new EditSession(new EditSessionBuilder(region.getWorld()));
