@@ -3,7 +3,7 @@ main: cn.miranda.MeowRoguelike.MeowRoguelike
 version: 0.1.2
 author: Miranda
 description: 猫与地下城/勇者斗恶猫
-softdepend: [ MeowCraft, WorldEdit ]
+softdepend: [ MeowCraft, WorldEdit, Multiverse-Core ]
 load: POSTWORLD
 api-version: 1.15
 
