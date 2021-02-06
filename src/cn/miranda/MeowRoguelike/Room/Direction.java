@@ -8,7 +8,6 @@ public enum Direction {
     UP(new NodeLocation(0, 1, 0), new NodeLocation(12, 14, 12), false),
     DOWN(new NodeLocation(0, -1, 0), new NodeLocation(12, 0, 12), false);
 
-
     private final NodeLocation offset;
     private final NodeLocation doorLocation;
     private final boolean isFlat;

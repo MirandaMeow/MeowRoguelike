@@ -27,9 +27,9 @@ public class PathGenerator {
         nodes.add(new Node(new NodeLocation(0, 0, 0), new ArrayList<>(), null, RoomType.ORIGIN));
         addMainNode(roomCount);
         nodes.get(nodes.size() - 1).setRoomType(RoomType.BOSS);
-        addBonusNode(bonusCount);
         addSubNode(70, RoomType.MAIN);
         addSubNode(40, RoomType.SUB);
+        addBonusNode(bonusCount);
         show(player);
     }
 
@@ -86,28 +86,6 @@ public class PathGenerator {
         }
     }
 
-
-    private void addBonusNode(int bonusCount) {
-        ArrayList<Node> mainNode = new ArrayList<>();
-        for (Node node : nodes) {
-            if (node.getRoomType() == RoomType.MAIN) {
-                mainNode.add(node);
-            }
-        }
-        for (int i = 0; i < bonusCount; i++) {
-            if (mainNode.size() == 0) {
-                break;
-            }
-            Node nowNode = mainNode.get(Editor.getRandom(mainNode.size()));
-            Node newNode = nowNode.link(nodes);
-            if (newNode != null) {
-                newNode.setRoomType(RoomType.BONUS);
-                nodes.add(newNode);
-            }
-        }
-    }
-
-
     /**
      * 根据概率添加支路
      *
@@ -130,6 +108,31 @@ public class PathGenerator {
             }
         }
         nodes.addAll(subNodes);
+    }
+
+    /**
+     * 根据指定数量添加奖励房间，最终生成的奖励房间可能会少于给定的数量
+     *
+     * @param bonusCount 奖励房间的数量
+     */
+    private void addBonusNode(int bonusCount) {
+        ArrayList<Node> normalNode = new ArrayList<>();
+        for (Node node : nodes) {
+            if (node.getRoomType() == RoomType.MAIN || node.getRoomType() == RoomType.SUB) {
+                normalNode.add(node);
+            }
+        }
+        for (int i = 0; i < bonusCount; i++) {
+            if (normalNode.size() == 0) {
+                break;
+            }
+            Node nowNode = normalNode.get(Editor.getRandom(normalNode.size()));
+            Node newNode = nowNode.link(nodes);
+            if (newNode != null) {
+                newNode.setRoomType(RoomType.BONUS);
+                nodes.add(newNode);
+            }
+        }
     }
 
     /**
