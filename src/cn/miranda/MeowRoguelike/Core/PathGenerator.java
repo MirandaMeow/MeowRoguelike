@@ -122,7 +122,7 @@ public class PathGenerator {
                 normalNode.add(node);
             }
         }
-        for (int i = 0; i < bonusCount; i++) {
+        for (int i = 0; i < bonusCount + 1; i++) {
             if (normalNode.size() == 0) {
                 break;
             }

@@ -115,11 +115,15 @@ public class EditorCommand implements TabExecutor {
             int bonusCount;
             try {
                 roomCount = Integer.parseInt(args[1]) - 1;
+                bonusCount = Integer.parseInt(args[2]) - 1;
                 if (roomCount < 2) {
                     MessageManager.Message(player, "§c主要路径个数必须大于等于 §b3");
                     return true;
                 }
-                bonusCount = Integer.parseInt(args[2]) - 1;
+                if (bonusCount < 0) {
+                    MessageManager.Message(player, "§c奖励房个数必须大于等于 §b0");
+                    return true;
+                }
             } catch (NumberFormatException e) {
                 MessageManager.Message(player, "§c房间数量必须为数字");
                 return true;
