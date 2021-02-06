@@ -17,17 +17,17 @@ import java.util.Map;
 
 public class PathGenerator {
     private final ArrayList<Node> nodes = new ArrayList<>();
-    private final ArrayList<Integer> result = new ArrayList<>(Arrays.asList(0, 0));
+    private final ArrayList<Integer> result = new ArrayList<>(Arrays.asList(0, 0, 0, 0, 0));
 
-    public PathGenerator(Player player, int roomCount) {
-
-        generator(player, roomCount);
+    public PathGenerator(Player player, int roomCount, int bonusCount) {
+        generator(player, roomCount, bonusCount);
     }
 
-    private void generator(Player player, int count) {
+    private void generator(Player player, int roomCount, int bonusCount) {
         nodes.add(new Node(new NodeLocation(0, 0, 0), new ArrayList<>(), null, RoomType.ORIGIN));
-        addMainNode(count);
+        addMainNode(roomCount);
         nodes.get(nodes.size() - 1).setRoomType(RoomType.BOSS);
+        addBonusNode(bonusCount);
         addSubNode(70, RoomType.MAIN);
         addSubNode(40, RoomType.SUB);
         show(player);
@@ -85,6 +85,28 @@ public class PathGenerator {
             }
         }
     }
+
+
+    private void addBonusNode(int bonusCount) {
+        ArrayList<Node> mainNode = new ArrayList<>();
+        for (Node node : nodes) {
+            if (node.getRoomType() == RoomType.MAIN) {
+                mainNode.add(node);
+            }
+        }
+        for (int i = 0; i < bonusCount; i++) {
+            if (mainNode.size() == 0) {
+                break;
+            }
+            Node nowNode = mainNode.get(Editor.getRandom(mainNode.size()));
+            Node newNode = nowNode.link(nodes);
+            if (newNode != null) {
+                newNode.setRoomType(RoomType.BONUS);
+                nodes.add(newNode);
+            }
+        }
+    }
+
 
     /**
      * 根据概率添加支路
@@ -165,13 +187,20 @@ public class PathGenerator {
     public ArrayList<Integer> getResult() {
         for (Node node : nodes) {
             switch (node.getRoomType()) {
-                case MAIN:
-                case BOSS:
                 case ORIGIN:
                     result.set(0, result.get(0) + 1);
                     break;
-                case SUB:
+                case MAIN:
                     result.set(1, result.get(1) + 1);
+                    break;
+                case SUB:
+                    result.set(2, result.get(2) + 1);
+                    break;
+                case BONUS:
+                    result.set(3, result.get(3) + 1);
+                    break;
+                case BOSS:
+                    result.set(4, result.get(4) + 1);
                     break;
                 default:
                     break;

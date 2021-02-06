@@ -4,7 +4,8 @@ public enum RoomType {
     MAIN("normal"),
     SUB("normal"),
     BOSS("boss"),
-    ORIGIN("origin");
+    ORIGIN("origin"),
+    BONUS("bonus");
 
     private final String prefix;
 

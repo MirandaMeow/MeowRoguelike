@@ -45,9 +45,9 @@ public class EditorCommand implements TabExecutor {
             Region region = Editor.getSelection(player);
             String type = args[1];
             String roomName = args[2];
-            ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss"));
+            ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss", "bonus"));
             if (!validType.contains(type)) {
-                MessageManager.Message(player, "§e允许的类型为 origin normal boss");
+                MessageManager.Message(player, "§e允许的类型为 §b origin normal boss bonus");
                 return true;
             }
             if (region == null) {
@@ -61,9 +61,9 @@ public class EditorCommand implements TabExecutor {
         if (Objects.equals(option, "load") && argLength == 3) {
             String type = args[1];
             String roomName = args[2];
-            ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss"));
+            ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss", "bonus"));
             if (!validType.contains(type)) {
-                MessageManager.Message(player, "§e允许的类型为 origin normal boss");
+                MessageManager.Message(player, "§e允许的类型为 §b origin normal boss bonus");
                 return true;
             }
             try {
@@ -79,9 +79,9 @@ public class EditorCommand implements TabExecutor {
         }
         if (Objects.equals(option, "list") && argLength == 2) {
             String type = args[1];
-            ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss", "all"));
+            ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss", "bonus", "all"));
             if (!validType.contains(type)) {
-                MessageManager.Message(player, "§e允许的类型为 origin normal boss all");
+                MessageManager.Message(player, "§e允许的类型为 §b origin normal boss bonus all");
                 return true;
             }
             ArrayList<String> rooms = Editor.getRoomNames(type);
@@ -110,21 +110,30 @@ public class EditorCommand implements TabExecutor {
             MessageManager.Message(player, "§c房间不存在");
             return true;
         }
-        if (Objects.equals(option, "create") && argLength == 2) {
+        if (Objects.equals(option, "create") && argLength == 3) {
             int roomCount;
+            int bonusCount;
             try {
                 roomCount = Integer.parseInt(args[1]) - 1;
-                if (roomCount < 0) {
-                    MessageManager.Message(player, "§c房间长度错误");
+                if (roomCount < 3) {
+                    MessageManager.Message(player, "§c主要路径个数必须大于 §b3");
                     return true;
                 }
+                bonusCount = Integer.parseInt(args[2]) - 1;
             } catch (NumberFormatException e) {
                 MessageManager.Message(player, "§c房间数量必须为数字");
                 return true;
             }
-            PathGenerator pathGenerator = new PathGenerator(player, roomCount);
+            PathGenerator pathGenerator = new PathGenerator(player, roomCount, bonusCount);
             ArrayList<Integer> result = pathGenerator.getResult();
-            MessageManager.Message(player, String.format("§e生成完成, 主路 §b%d §e个, 支路 §b%d §e个", result.get(0), result.get(1)));
+            MessageManager.Message(player, "§b---- §e生成完成 §b----");
+            MessageManager.Message(player, String.format("§e   初始 - §b%d §e-", result.get(0)));
+            MessageManager.Message(player, String.format("§e   主路 - §b%d §e-", result.get(1)));
+            MessageManager.Message(player, String.format("§e   支路 - §b%d §e-", result.get(2)));
+            MessageManager.Message(player, String.format("§e   奖励 - §b%d §e-", result.get(3)));
+            MessageManager.Message(player, String.format("§e   BOSS - §b%d §e-", result.get(4)));
+            MessageManager.Message(player, String.format("§e   合计 - §b%d §e-", result.get(0) + result.get(1) + result.get(2) + result.get(3) + result.get(4)));
+            MessageManager.Message(player, "§b-------------------");
             return true;
         }
         MessageManager.Message(player, "§c命令参数错误");
@@ -138,17 +147,17 @@ public class EditorCommand implements TabExecutor {
         }
         if (strings.length == 2) {
             if (Objects.equals(strings[0], "save") || Objects.equals(strings[0], "remove") || Objects.equals(strings[0], "load")) {
-                ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss"));
+                ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss", "bonus"));
                 return Misc.returnSelectList(validType, strings[1]);
             }
             if (Objects.equals(strings[0], "list")) {
-                ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss", "all"));
+                ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss", "bonus", "all"));
                 return Misc.returnSelectList(validType, strings[1]);
             }
         }
         if (strings.length == 3) {
             if (Objects.equals(strings[0], "remove") || Objects.equals(strings[0], "load")) {
-                ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss"));
+                ArrayList<String> validType = new ArrayList<>(Arrays.asList("origin", "normal", "boss", "bonus"));
                 if (validType.contains(strings[1])) {
                     ArrayList<String> validRoomNames = Editor.getRoomNames(strings[1]);
                     if (validRoomNames == null) {
