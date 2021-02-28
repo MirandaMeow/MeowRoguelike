@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cn.miranda.MeowRoguelike.Manager.ConfigManager.config;
+
 public class PathGenerator {
     private final ArrayList<Node> nodes = new ArrayList<>();
     private final ArrayList<Integer> result = new ArrayList<>(Arrays.asList(0, 0, 0, 0, 0));
@@ -152,11 +154,12 @@ public class PathGenerator {
                 if (door.getKey().equals(Direction.DOWN)) {
                     doorLocation.getBlock().setType(Material.WATER);
                 } else {
+                    int floor = -(config.getInt("room.y") - 2);
                     doorLocation.clone().getBlock().setType(Material.AIR);
-                    doorLocation.clone().add(1, -13, 0).getBlock().setType(Material.STONE);
-                    doorLocation.clone().add(-1, -13, 0).getBlock().setType(Material.STONE);
-                    doorLocation.clone().add(0, -13, 1).getBlock().setType(Material.STONE);
-                    doorLocation.clone().add(0, -13, -1).getBlock().setType(Material.STONE);
+                    doorLocation.clone().add(1, floor, 0).getBlock().setType(Material.STONE);
+                    doorLocation.clone().add(-1, floor, 0).getBlock().setType(Material.STONE);
+                    doorLocation.clone().add(0, floor, 1).getBlock().setType(Material.STONE);
+                    doorLocation.clone().add(0, floor, -1).getBlock().setType(Material.STONE);
                 }
             }
         }
@@ -173,6 +176,7 @@ public class PathGenerator {
                 String roomName = selectRoom(node.getRoomType().getPrefix());
                 if (roomName == null) {
                     MessageManager.Message(player, String.format("§c房间没有成功生成, 因为不存在类型为 §9§l%s §c的房间", node.getRoomType()));
+                    continue;
                 }
                 Editor.loadRegion(roomName, player, node.getRealLocation(player.getLocation()));
                 creatDoors(node, player.getLocation());

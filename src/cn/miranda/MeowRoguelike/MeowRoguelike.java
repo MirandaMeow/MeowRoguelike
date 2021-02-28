@@ -17,15 +17,14 @@ public class MeowRoguelike extends JavaPlugin {
     }
 
     public void onEnable() {
-        System.out.print("[猫与地下城] 正在载入\n");
+        System.out.print("[猫与地下城] 载入中\n");
         PluginLoaderManager.loads();
         plugin.getCommand("rlroom").setExecutor(new EditorCommand());
         ConfigManager.loadConfigs();
     }
 
     public void onDisable() {
-        System.out.print("[猫与地下城] 正在禁用\n");
-        ConfigManager.saveConfigs();
+        System.out.print("[猫与地下城] 已禁用\n");
     }
 
     public File getSchemaFolder() {
